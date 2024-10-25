@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Category;
 use App\Entity\Meeting;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -18,8 +20,14 @@ class MeetingType extends AbstractType
             ->add('title',TextType::class)
             ->add('date', DateTimeType::class )
             ->add('description', TextareaType::class,['required' => false,
-            ]) ;
+            ]) 
+            ->add('categorie', EntityType::class, [
+                'class' => Category::class,
+                'choice_label' => 'name',
+                'placeholder' => 'Categories',
+            ]);
     }
+    
 
     public function configureOptions(OptionsResolver $resolver): void
     {

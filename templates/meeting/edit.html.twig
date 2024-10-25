@@ -3,10 +3,79 @@
 {% block title %}Modifier Réunion{% endblock %}
 
 {% block body %}
-    <h1>Modifier la réunion</h1>
+<style>
+    .container {
+        max-width: 600px;
+        margin: auto;
+        padding: 10px;
+        /* background-color: #fff; */
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        text-align: center;
+        color: #4b5563;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        color: #4b5563;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        transition: border-color 0.2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+        border-color: #60a5fa;
+        outline: none;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background-color: #3b82f6;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    button:hover {
+        background-color: #2563eb;
+    }
+
+    .return-link {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        color: #3b82f6;
+        text-decoration: underline;
+    }
+
+    .return-link:hover {
+        text-decoration: none;
+    }
+    </style>
+    <div class="container">
+    <h1>Modifier la Réunion</h1>
     {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button type="submit">Enregistrer les modifications</button>
+        <div class="form-group">
+            {{ form_widget(form) }}
+        </div>
+        <button type="submit">Enregistrer les Modifications</button>
     {{ form_end(form) }}
-    <a href="{{ path('meeting_index') }}">Retour à la liste</a>
+    <a href="{{ path('meeting_index') }}" class="return-link">Retour à la liste</a>
+</div>
 {% endblock %}

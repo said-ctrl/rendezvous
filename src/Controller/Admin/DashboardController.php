@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Category;
 use App\Entity\Meeting;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -47,6 +48,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToRoute('vers site', 'fa fa-home', 'meeting_index');
         yield MenuItem::linkToCrud('User', 'fas fa-list', User::class);
         yield MenuItem::linkToCrud('Meeting', 'fas fa-list', Meeting::class);
+        // yield MenuItem::linkToCrud('Category', 'fas fa-list', Category::class);
+
 
         
     }

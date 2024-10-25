@@ -2,114 +2,114 @@
 
 {% block title %}Réunions
 {% endblock %}
-{% block body %}
 
-	<style>
-		.calendar-container {
-			max-width: 800px;
-			margin: auto;
-		}
+	{% block body %}
+<style>
+    .calendar-container {
+        max-width: 800px;
+        margin: auto;
+    }
 
-		.meeting-list {
-			list-style-type: none;
-			padding: 0;
-		}
+    .meeting-list {
+        list-style-type: none;
+        padding: 0;
+    }
 
-		.meeting-item {
-			transition: background-color 0.2s;
-		}
+    .meeting-item {
+        transition: background-color 0.2s;
+    }
 
-		.meeting-item:hover {
-			background-color: #f9f9f9;
-		}
+    .meeting-item:hover {
+        background-color: #f9f9f9;
+    }
 
-		.text-gray-600 {
-			color: #4b5563;
-		}
+    .text-gray-600 {
+        color: #4b5563;
+    }
 
-		.text-gray-500 {
-			color: #6b7280;
-		}
-		.container {
-			max-width: 1200px;
-		}
+    .text-gray-500 {
+        color: #6b7280;
+    }
 
-		.meeting-card {
-			transition: transform 0.2s, box-shadow 0.2s;
-		}
+    .container {
+        max-width: 1200px;
+    }
 
-		.meeting-card:hover {
-			transform: translateY(-2px);
-		}
+    .meeting-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
 
-		.grid {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-			gap: 16px;
-		}
-	</style>
-<main class="container mx-auto mt-10">
+    .meeting-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 16px;
+    }
+	.fc-event {
+    color: black; /* Assurez-vous que le texte est visible */
+}
+</style>
+
+{# <main class="container mx-auto mt-10">
     <h1 class="text-4xl font-bold mb-6 text-center">Bienvenue</h1>
     <p class="mb-4 text-center">Organisez vos réunions et tâches avec style et efficacité.</p>
 
     <h2 class="text-2xl font-bold mb-4 mt-10">Calendrier des Réunions</h2>
     <div id='calendar' class="mt-6"></div>
+</main> #}
 
+<main class="container mx-auto mt-10">
+    <p class="mb-4 text-center">Organisez avec style et efficacité.</p>
+    <div id='calendar' class="mt-6"></div>
+
+    <h2 class="text-2xl font-bold mb-4 mt-10">les Corps V</h2>
+    <a href="{{ path('meeting_new') }}" class="bg-blue-500 text-white px-4 py-2 rounded mb-4 inline-block shadow">Ajouter une nouvelle Corps V</a>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for meeting in meetings %}
+            <div class="meeting-card bg-white p-4 rounded-lg shadow hover:shadow-lg transition color-{{ loop.index0 % 5}}">
+                <h3 class="text-lg text-gray-600 font-semibold">{{ meeting.title }}</h3>
+                <p class="text-gray-600">{{ meeting.date|date('Y-m-d H:i:s') }}</p>
+                <div class="flex justify-end mt-4">
+                    <a href="{{ path('meeting_edit', {'id': meeting.id}) }}" class="text-blue-500 hover:underline mr-2">
+                        <i class="fas fa-edit"></i>
+                        Modifier
+                    </a>
+                    <form method="post" action="{{ path('meeting_delete', {'id': meeting.id}) }}" style="display:inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ meeting.id) }}">
+                        <button type="submit" class="text-green-500 hover:underline">
+                            <i class="fas fa-thumbs-up"></i>
+                            Effectuer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        {% else %}
+            <div class="text-gray-500">Aucune réunion à afficher.</div>
+        {% endfor %}
+    </div>
 </main>
 
-
-
-
-
-	 <main class="container mx-auto mt-10">
-		<h1 class="text-4xl font-bold mb-6 text-center">Bienvenue</h1>
-		<p class="mb-4 text-center">Organisez vos réunions et tâches avec style et efficacité.</p>
-
-		<h2 class="text-2xl font-bold mb-4 mt-10">Réunions</h2>
-		<a href="{{ path('meeting_new') }}" class="bg-blue-500 text-white px-4 py-2 rounded mb-4 inline-block shadow">Ajouter une nouvelle réunion</a>
-
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-			{% for meeting in meetings %}
-				<div class="meeting-card bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
-					<h3 class="text-lg text-gray-600 font-semibold">{{ meeting.title }}</h3>
-					<p class="text-gray-600">{{ meeting.date|date('d/m/Y H:i') }}</p>
-					<div class="flex justify-end mt-4">
-						<a href="{{ path('meeting_edit', {'id': meeting.id}) }}" class="text-blue-500 hover:underline mr-2">
-							<i class="fas fa-edit"></i>
-							Modifier
-						</a>
-						<form method="post" action="{{ path('meeting_delete', {'id': meeting.id}) }}" style="display:inline;">
-							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ meeting.id) }}">
-							<button type="submit" class="text-green-500 hover:underline">
-								<i class="fas fa-thumbs-up"></i>
-								Effectuer
-							</button>
-						</form>
-					</div>
-				</div>
-			{% else %}
-				<div class="text-gray-500">Aucune réunion à afficher.</div>
-			{% endfor %}
-		</div>
-		<div id='calendar' class="mt-6"></div>
-
-	</main>
-    <script>
+<script>
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        events: [
-            {% for meeting in meetings %}
+    var events = [
+        {% for meeting in meetings %}
             {
                 title: '{{ meeting.title }}',
                 start: '{{ meeting.date|date("Y-m-d") }}',
-                classNames: ['meeting-event']
+                classNames: ['meeting-event', 'color-{{ loop.index0 % 5 }}']  // Utilisation d'une couleur dynamique
             },
-            {% endfor %}
-        ],
-        eventColor: '#378006',
+        {% endfor %}
+    ];
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: events,
         dateClick: function(info) {
             alert('Date: ' + info.dateStr);
         }
@@ -118,4 +118,14 @@ document.addEventListener('DOMContentLoaded', function() {
     calendar.render();
 });
 </script>
-	{% endblock %}
+
+<style>
+
+.color-0 { background-color: #ff9999; }
+.color-1 { background-color: #99ff99; }
+.color-2 { background-color: #9999ff; }
+.color-3 { background-color: #ffff99; }
+.color-4 { background-color: #ffcc99; }
+</style>
+{% endblock %}
+
