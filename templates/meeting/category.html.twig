@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catégories{% endblock %}
+
+{% block body %}
+    <h1 class="text-3xl font-bold mb-4">Catégories</h1>
+    <ul class="list-disc pl-5">
+        {% for category in categories %}
+            <li><a href="{{ path('category_tasks', {'categoryName': category|lower}) }}">{{ category }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

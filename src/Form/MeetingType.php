@@ -21,7 +21,7 @@ class MeetingType extends AbstractType
             ->add('date', DateTimeType::class )
             ->add('description', TextareaType::class,['required' => false,
             ]) 
-            ->add('categorie', EntityType::class, [
+            ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name',
                 'placeholder' => 'Categories',

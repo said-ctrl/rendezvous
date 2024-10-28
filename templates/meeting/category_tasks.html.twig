@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réunions - {{ categoryName }}{% endblock %}
+
+{% block body %}
+<a class="text-red-600 mb-8"  href="{{path('meeting_index')}}">retour</a>
+    <h1 class="text-3xl font-bold mb-4">Réunions - {{ categoryName }}</h1>
+
+    {% if meetings is empty %}
+        <p>Aucune réunion à afficher pour cette catégorie. </p><a class="text-blue-600" href="{{ path('meeting_new') }}">Ajouter une nouvelle réunion.</a>
+    {% else %}
+
+    {% for meeting in meetings %}
+        <div class="glass-card color-{{ meeting.category.name|lower|replace({' ': '-'}) }}">
+            <h3>{{ meeting.title }}</h3>
+            <p>{{ meeting.date|date('Y-m-d H:i:s') }}</p>
+            <p>{{ meeting.description }}</p>
+            <a href="{{ path('meeting_edit', {'id': meeting.id}) }}">Modifier</a>
+        </div>
+ 
+    {% endfor %}
+    {% endif %}
+{% endblock %}

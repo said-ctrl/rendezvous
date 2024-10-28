@@ -1,5 +1,4 @@
 
-
 {% extends 'base.html.twig' %}
 
 {% block title %}Contact{% endblock %}
@@ -12,9 +11,33 @@
         <div class="alert alert-success">{{ message }}</div>
     {% endfor %}
 
-    {{ form_start(form)  }}
-        {{ form_widget(form) }}
-    {{ form_end(form) }}
+    {{ form_start(form, {'attr': {'class': 'glass-card color-a-faire p-4'}}) }}
+       
+        <div class="mb-4">
+            {{ form_widget(form.email, {'attr': {'class': 'form-input','placeholder': 'Votre email'}}) }}
+        </div>
+        <div class="mb-4">
+            {{ form_widget(form.message, {'attr': {'class': 'form-input','placeholder': 'Votre message'}}) }}
+        </div>
+        <div class="text-center">
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Envoyer</button>
+        </div>
 </div>
-{% endblock %}
 
+<style>
+    .form-input {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        padding: 10px;
+        width: 100%;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-input:focus {
+        border-color: #39ff14; /* Couleur de surbrillance */
+        outline: none;
+        box-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+    }
+</style>
+{% endblock %}

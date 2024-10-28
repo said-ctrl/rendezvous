@@ -21,8 +21,8 @@ class MeetingController extends AbstractController
         ]);
     }
     #[Route('/meeting/new', name: 'meeting_new')]
-    
-    public function new (Request $request, EntityManagerInterface $entityManager):Response
+
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $meeting = new Meeting();
         $form = $this->createForm(MeetingType::class, $meeting);
@@ -39,10 +39,10 @@ class MeetingController extends AbstractController
         ]);
     }
 
-    
-      #[Route('/meeting/{id}/edit', name: 'meeting_edit')]
 
-    
+    #[Route('/meeting/{id}/edit', name: 'meeting_edit')]
+
+
     public function edit(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(MeetingType::class, $meeting);
@@ -60,21 +60,37 @@ class MeetingController extends AbstractController
         ]);
     }
 
-    
-    
+
+
     #[Route('/meeting/{id}/delete', name: 'meeting_delete')]
 
     public function delete(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$meeting->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $meeting->getId(), $request->request->get('_token'))) {
             $entityManager->remove($meeting);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('meeting_index');
     }
+    #[Route('/category', name: 'category')]
+    public function categories(): Response
+    {
+        // Vous pouvez soit récupérer les catégories à partir d'une entité, soit les définir statiquement.
+        $categories = ['Travail', 'Maison', 'Loisirs', 'Santé', 'À faire'];
 
+        return $this->render('meeting/category.html.twig', [
+            'categories' => $categories,
+        ]);
     }
+    #[Route('/category/{categoryName}', name: 'category_tasks')]
+    public function categoryTasks(string $categoryName, MeetingRepository $meetingRepository): Response
+    {
+        $meetings = $meetingRepository->findBy(['category' => $categoryName]); // Adaptez en fonction de votre structure
 
-
-
+        return $this->render('meeting/category_tasks.html.twig', [
+            'meetings' => $meetings,
+            'categoryName' => ucfirst($categoryName), // Pour afficher la première lettre en majuscule
+        ]);
+    }
+}

@@ -24,7 +24,7 @@ class Meeting
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'meetings')]
-    private ?Category $categorie = null;
+    private ?Category $category = null;
 
     public function getId(): ?int
     {
@@ -67,14 +67,14 @@ class Meeting
         return $this;
     }
 
-    public function getCategorie(): ?Category
+    public function getCategory(): ?Category
     {
-        return $this->categorie;
+        return $this->category;
     }
 
-    public function setCategorie(?Category $categorie): static
+    public function setCategory(?Category $category): static
     {
-        $this->categorie = $categorie;
+        $this->category = $category;
 
         return $this;
     }

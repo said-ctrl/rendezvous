@@ -3,129 +3,197 @@
 {% block title %}Réunions
 {% endblock %}
 
-	{% block body %}
-<style>
-    .calendar-container {
-        max-width: 800px;
-        margin: auto;
-    }
+{% block body %}
+	<style>
+		.calendar-container {
+			max-width: 100%;
+			height: 400px; /* Ajustez la hauteur selon vos besoins */
+		}
+		.glass-card a {
+			display: block;
+			text-decoration: none; /* Pour enlever le soulignement par défaut */
+			color: inherit; /* Pour garder la couleur du texte */
+		}
 
-    .meeting-list {
-        list-style-type: none;
-        padding: 0;
-    }
 
-    .meeting-item {
-        transition: background-color 0.2s;
-    }
+		.glass-card {
+			background: rgba(255, 255, 255, 0.2);
+			border-radius: 16px;
+			box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+			backdrop-filter: blur(10px);
+			-webkit-backdrop-filter: blur(10px);
+			border: 1px solid rgba(255, 255, 255, 0.3);
+			padding: 16px;
+			margin: 16px 0;
+			transition: transform 0.3s ease, box-shadow 0.3s ease;
+		}
 
-    .meeting-item:hover {
-        background-color: #f9f9f9;
-    }
+		.glass-card:hover {
+			cursor: pointer;
+			transform: translateY(-10px);
+			box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+		}
 
-    .text-gray-600 {
-        color: #4b5563;
-    }
+		.neon-text {
+			color: #39ff14;
+			text-shadow: 0 0 5px #39ff14, 0 0 10px #39ff14, 0 0 20px #39ff14, 0 0 40px #39ff14;
+		}
 
-    .text-gray-500 {
-        color: #6b7280;
-    }
+		.color-travail {
+			background-color: #5dade2;
+		}
+		.color-maison {
+			background-color: #af7ac5;
+		}
+		.color-loisirs {
+			background-color: #27ae60;
+		}
+		.color-santé {
+			background-color: #e74c3c;
+		}
+		.color-a-faire {
+			background-color: #f39c12;
+		}
+		.task-container {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+		}
 
-    .container {
-        max-width: 1200px;
-    }
-
-    .meeting-card {
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .meeting-card:hover {
-        transform: translateY(-2px);
-    }
-
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 16px;
-    }
-	.fc-event {
-    color: black; /* Assurez-vous que le texte est visible */
-}
-</style>
-
-{# <main class="container mx-auto mt-10">
-    <h1 class="text-4xl font-bold mb-6 text-center">Bienvenue</h1>
-    <p class="mb-4 text-center">Organisez vos réunions et tâches avec style et efficacité.</p>
-
-    <h2 class="text-2xl font-bold mb-4 mt-10">Calendrier des Réunions</h2>
-    <div id='calendar' class="mt-6"></div>
-</main> #}
+		.calendar-wrapper {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+	</style>
 
 <main class="container mx-auto mt-10">
-    <p class="mb-4 text-center">Organisez avec style et efficacité.</p>
-    <div id='calendar' class="mt-6"></div>
+    <div class="task-container">
+        <div class="task-list rounded-lg shadow-lg bg-gradient-to-r from-purple-500 to-pink-500 p-6">
+            <h1 class="text-3xl font-bold mb-6 neon-text text-center">Les Corps V</h1>
 
-    <h2 class="text-2xl font-bold mb-4 mt-10">les Corps V</h2>
-    <a href="{{ path('meeting_new') }}" class="bg-blue-500 text-white px-4 py-2 rounded mb-4 inline-block shadow">Ajouter une nouvelle Corps V</a>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for meeting in meetings %}
-            <div class="meeting-card bg-white p-4 rounded-lg shadow hover:shadow-lg transition color-{{ loop.index0 % 5}}">
-                <h3 class="text-lg text-gray-600 font-semibold">{{ meeting.title }}</h3>
-                <p class="text-gray-600">{{ meeting.date|date('Y-m-d H:i:s') }}</p>
-                <div class="flex justify-end mt-4">
-                    <a href="{{ path('meeting_edit', {'id': meeting.id}) }}" class="text-blue-500 hover:underline mr-2">
-                        <i class="fas fa-edit"></i>
-                        Modifier
-                    </a>
-                    <form method="post" action="{{ path('meeting_delete', {'id': meeting.id}) }}" style="display:inline;">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ meeting.id) }}">
-                        <button type="submit" class="text-green-500 hover:underline">
-                            <i class="fas fa-thumbs-up"></i>
-                            Effectuer
-                        </button>
-                    </form>
-                </div>
+            <div class="mb-4">
+                <select class="w-full p-2 rounded shadow-md bg-white text-black" id="categoryFilter">
+                    <option value="all">Toutes les catégories</option>
+                    <option value="travail">Travail</option>
+                    <option value="maison">Maison</option>
+                    <option value="loisirs">Loisirs</option>
+                    <option value="santé">Santé</option>
+                    <option value="a-faire">À faire</option>
+                </select>
             </div>
-        {% else %}
-            <div class="text-gray-500">Aucune réunion à afficher.</div>
-        {% endfor %}
+
+            <div class="mb-4">
+                <input class="text-black w-full p-2 rounded shadow-md" type="text" id="searchBar" placeholder="Rechercher une tâche..."/>
+            </div>
+
+            <a href="{{ path('meeting_new') }}" class="btn mb-4">Ajouter une nouvelle Chose à faire</a>
+
+            <div class="grid grid-cols-1 gap-4">
+                {% for meeting in meetings %}
+                    <div class="glass-card color-{{ meeting.category.name|lower|replace({' ': '-'}) }} p-4">
+                        <a href="{{ path('category_tasks', {'categoryName': meeting.category.name|lower|replace({' ': '-'})}) }}">
+                            <h3 class="task-title">{{ meeting.title }}</h3>
+                            <p class="task-date">{{ meeting.date|date('Y-m-d H:i:s') }}</p>
+                            <p class="task-description">{{ meeting.description }}</p>
+                            <span class="text-2xl text-xs font-medium">{{ meeting.category.name }}</span>
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="text-gray-500 text-center">Aucune réunion à afficher.</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="calendar-wrapper">
+            <h2 class="text-3xl font-bold text-white text-center mb-4">Calendrier</h2>
+            <div id='calendar' class="calendar-container rounded-lg shadow-lg bg-gradient-to-r from-indigo-500 to-blue-600 p-4">
+                <h3 class="text-xl mt-3 mb-3 font-bold">Légende des catégories :</h3>
+                <ul class="flex gap-3 list-disc pl-5">
+                    <span class="color-travail p-2 rounded inline-block"></span> Travail
+                    <span class="ml-2 color-maison p-2 rounded inline-block"></span> Maison
+                    <span class="ml-2 color-loisirs p-2 rounded inline-block"></span> Loisirs
+                    <span class="ml-2 color-santé p-2 rounded inline-block"></span> Santé
+                    <span class="ml-2 color-a-faire p-2 rounded inline-block"></span> À faire
+                </ul>
+            </div>
+        </div>
     </div>
 </main>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+var calendarEl = document.getElementById('calendar');
+var events = [{% for meeting in meetings %}{
+title: '{{ meeting.title }}',
+start: '{{ meeting.date|date("Y-m-d") }}',
+classNames: [
+'meeting-event',
+'color-' + '{{ meeting.category.name|lower }}'.replace(/ /g, '-'),
+'text-' + '{{ meeting.category.name|lower }}'.replace(/ /g, '-')
+]
+},{% endfor %}];
 
-    var events = [
-        {% for meeting in meetings %}
-            {
-                title: '{{ meeting.title }}',
-                start: '{{ meeting.date|date("Y-m-d") }}',
-                classNames: ['meeting-event', 'color-{{ loop.index0 % 5 }}']  // Utilisation d'une couleur dynamique
-            },
-        {% endfor %}
-    ];
-
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        events: events,
-        dateClick: function(info) {
-            alert('Date: ' + info.dateStr);
-        }
-    });
-
-    calendar.render();
+var calendar = new FullCalendar.Calendar(calendarEl, {
+initialView: 'timeGridWeek',
+events: events
 });
-</script>
 
-<style>
+calendar.render();
+});
 
-.color-0 { background-color: #ff9999; }
-.color-1 { background-color: #99ff99; }
-.color-2 { background-color: #9999ff; }
-.color-3 { background-color: #ffff99; }
-.color-4 { background-color: #ffcc99; }
-</style>
-{% endblock %}
+function sortTasks(criteria) {
+var tasks = document.querySelectorAll('.glass-card');
+var tasksArray = Array.from(tasks);
 
+tasksArray.sort(function (a, b) {
+var aValue,
+bValue;
+if (criteria === 'date') {
+aValue = new Date(a.querySelector('.task-date').textContent);
+bValue = new Date(b.querySelector('.task-date').textContent);
+} else if (criteria === 'priority') {
+aValue = a.getAttribute('data-priority'); // Assurez-vous que cette donnée existe
+bValue = b.getAttribute('data-priority');
+}
+return aValue > bValue ? 1 : -1;
+});
+
+var taskList = document.querySelector('.task-list .grid');
+taskList.innerHTML = '';
+tasksArray.forEach(function (task) {
+taskList.appendChild(task);
+});
+}
+
+document.getElementById('searchBar').addEventListener('input', function () {
+var searchTerm = this.value.toLowerCase();
+var tasks = document.querySelectorAll('.glass-card');
+
+tasks.forEach(function (task) {
+var title = task.querySelector('.task-title').textContent.toLowerCase();
+var description = task.querySelector('.task-description').textContent.toLowerCase();
+
+if (title.includes(searchTerm) || description.includes(searchTerm)) {
+task.style.display = '';
+} else {
+task.style.display = 'none';
+}
+});
+});
+
+document.getElementById('categoryFilter').addEventListener('change', function () {
+var selectedCategory = this.value;
+var tasks = document.querySelectorAll('.glass-card');
+
+tasks.forEach(function (task) {
+var taskCategory = task.getAttribute('data-category');
+if (selectedCategory === 'all' || taskCategory === selectedCategory) {
+task.style.display = ''; // Afficher la tâche
+} else {
+task.style.display = 'none'; // Masquer la tâche
+}
+});
+});
+		</script>
+	{% endblock %}

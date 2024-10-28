@@ -58,7 +58,7 @@ class Category
     {
         if (!$this->meetings->contains($meeting)) {
             $this->meetings->add($meeting);
-            $meeting->setCategorie($this);
+            $meeting->setCategory($this);
         }
 
         return $this;
@@ -68,8 +68,8 @@ class Category
     {
         if ($this->meetings->removeElement($meeting)) {
             // set the owning side to null (unless already changed)
-            if ($meeting->getCategorie() === $this) {
-                $meeting->setCategorie(null);
+            if ($meeting->getCategory() === $this) {
+                $meeting->setCategory(null);
             }
         }
 
